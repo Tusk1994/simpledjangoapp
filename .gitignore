@@ -1,0 +1,17 @@
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+
+# local settings
+/simple_django/simple_django/local_settings.py
+
+# insert my data
+/simple_django/simple_django/init_data.py
+
+# venv
+/venv
+
+#.idea
+/.idea
+
+# .pyc
+/simple_django/simple_django/__pycache__
+/simple_django/client/__pycache__

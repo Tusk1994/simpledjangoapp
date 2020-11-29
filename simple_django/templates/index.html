@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Simple Django App</title>
+    {% load static %}
+    <script src="https://code.highcharts.com/highcharts.js"></script>
+    <script src="https://code.highcharts.com/modules/series-label.js"></script>
+    <script src="https://code.highcharts.com/modules/exporting.js"></script>
+    <script src="https://code.highcharts.com/modules/export-data.js"></script>
+    <script src="https://code.highcharts.com/modules/accessibility.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="{% static 'js/index.js' %}"></script>
+
+    <link rel="stylesheet" href="{% static 'css/index.css' %}">
+</head>
+<body onload="change_graph();">
+    <div class="context">
+        <figure class="highcharts-figure">
+            <div id="container"></div>
+        </figure>
+        <div id="wrapper">
+            <button id="bt_graph" value="l" onclick="change_graph();">Change Graph</button>
+        </div>
+    </div>
+</body>
+</html>
