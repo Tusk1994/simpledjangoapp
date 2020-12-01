@@ -1,10 +1,8 @@
-import json
-import datetime
-import pytz
-
-from django.http import HttpResponse
 from django.shortcuts import render
 from django.db.models import Sum
+import pandas as pd
+from pandas_highcharts.core import serialize
+from pandas_highcharts.core import json_encode
 
 from client.models import *
 
@@ -20,84 +18,82 @@ def line_chart(request):
     """
     Draw line chart
     """
-    resp_dict = {
-        'chart': {
-            'type': 'line',
-            'height': str((9 / 16 * 80)) + '%',
-        },
-        'title': 'Arrival of pay',
-        'series': [{
-            'data': [
-                [
-                    # Convert to timestamp for highcharts
-                    (p.pay_date - datetime.datetime(1970, 1, 1, tzinfo=pytz.UTC)).total_seconds() * 1000,
-                    p.amount
-                ]
-                for p in Payments.objects.all()
-            ],
-            'name': "Value of pay",
-            'dataLabels': {
-                'enabled': 'true',
-                'format': '{point.y}'
-            },
-        }],
-        'yAxis': {
-            'title': {
-                'text': 'Amount'
-            }
-        },
+    df = pd.DataFrame(Payments.objects.all().values('pay_date', 'amount'))
+    hc = serialize(df.set_index('pay_date'), render_to="container", title="Arrival of pay", output_type="dict")
 
-        'xAxis': {
-            'type': 'datetime',
+    hc['chart']['type'] = 'line'
+    hc['chart']['height'] = str((9 / 16 * 80)) + '%'
+    hc['credits'] = {
+        'enabled': 'false'
+    },
 
-            'accessibility': {
-                'rangeDescription': 'Date'
-            },
-            'title': {
-                'text': 'Date'
-            }
-        },
+    hc['legend'] = {
+        'enabled': 'false'
+    },
+
+    hc['yAxis'][0]['title'] = {
+        'text': 'Amount',
     }
-    return HttpResponse(json.dumps(resp_dict))
+
+    hc['xAxis']['type'] = 'datetime'
+    hc['xAxis']['accessibility'] = {
+        'rangeDescription': 'Date',
+    }
+    hc['xAxis']['title'] = {
+        'text': 'Date',
+    }
+
+    hc['series'][0]['name'] = "Value of pay"
+    hc['series'][0]['dataLabels'] = {
+        'enabled': 'true',
+        'format': '{point.y}'
+    }
+
+    return render(request, 'graph.html', {"graph": "Highcharts.chart(%s);" % json_encode(hc)})
 
 
 def column_chart(request):
     """
     Draw column chart
     """
-    resp_dict = {
-        'chart': {
-            'type': 'column',
-            'height': str((9 / 16 * 80)) + '%',
-        },
-        'title': 'Distribution of pay',
-        'series': [{
-            'data': [
-                {
-                    'name': '{0} {1}'.format(p.last_name, p.first_name),
-                    # Get sum of payments for each Client
-                    'y': p.payments_set.aggregate(Sum('amount'))['amount__sum'],
-                }
-                for p in Clients.objects.all().prefetch_related('payments_set')
-            ],
-            'dataLabels': {
-                'enabled': 'true',
-                'format': '{point.y}'
-            },
-            'colorByPoint': 'true',
-            'name': "Value of pay",
-        }],
-        'yAxis': {
-            'title': {
-                'text': 'Amount'
-            }
-        },
 
-        'xAxis': {
-            'type': 'category',
-            'title': {
-                'text': 'Full name'
-            }
-        },
+    data_clients = []
+    for client in Clients.objects.all().prefetch_related('payments_set'):
+        data_clients.append({
+            'name': '{0} {1}'.format(client.last_name, client.first_name),
+            'y': client.payments_set.aggregate(Sum('amount'))['amount__sum']
+        })
+
+    df = pd.DataFrame(data_clients)
+    hc = serialize(df.set_index('name'), render_to="container", title="Distribution of pay", output_type="dict")
+
+    hc['chart']['type'] = 'column'
+    hc['chart']['height'] = str((9 / 16 * 80)) + '%'
+    hc['credits'] = {
+        'enabled': 'false'
+    },
+
+    hc['legend'] = {
+        'enabled': 'false'
+    },
+
+    hc['yAxis'][0]['title'] = {
+        'text': 'Amount',
     }
-    return HttpResponse(json.dumps(resp_dict))
+
+    hc['xAxis']['type'] = 'category'
+    hc['xAxis']['title'] = {
+        'text': 'Full name',
+        'title': {
+            'text': 'Full name'
+        }
+    }
+
+    hc['series'][0]['name'] = "Value of pay"
+    hc['series'][0]['colorByPoint'] = "true"
+    hc['series'][0]['dataLabels'] = {
+        'enabled': 'true',
+        'format': '{point.y}'
+    }
+
+    return render(request, 'graph.html', {"graph": "Highcharts.chart(%s);" % json_encode(hc)})
