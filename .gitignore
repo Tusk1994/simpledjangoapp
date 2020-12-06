@@ -15,3 +15,4 @@
 # .pyc
 /simple_django/simple_django/__pycache__
 /simple_django/client/__pycache__
+*.pyc
