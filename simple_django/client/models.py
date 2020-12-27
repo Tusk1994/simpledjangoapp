@@ -1,5 +1,6 @@
 from django.db import models
 from django.utils.translation import gettext as _
+from django.utils.translation import pgettext
 
 
 class Clients(models.Model):
@@ -27,5 +28,5 @@ class Payments(models.Model):
 
     class Meta:
         db_table = 'payments'
-        verbose_name = _("Payment of client")
+        verbose_name = pgettext("Payment of client", "accs")
         verbose_name_plural = _("Payments of clients")
