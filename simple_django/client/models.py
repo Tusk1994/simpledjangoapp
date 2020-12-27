@@ -27,5 +27,5 @@ class Payments(models.Model):
 
     class Meta:
         db_table = 'payments'
-        verbose_name = _("Payment")
-        verbose_name_plural = _("Payments")
+        verbose_name = _("Payment of client")
+        verbose_name_plural = _("Payments of clients")

@@ -29,9 +29,9 @@ msgid "Clients"
 msgstr "Клиенты"
 
 #: .\models.py:30
-msgid "Payment"
-msgstr "Платеж"
+msgid "Payment of client"
+msgstr "Плата клиента"
 
 #: .\models.py:31
-msgid "Payments"
-msgstr "Платежи"
+msgid "Payments of clients"
+msgstr "Платы клиентов"
