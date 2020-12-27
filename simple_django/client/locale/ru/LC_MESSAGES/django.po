@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-12-27 20:48+0300\n"
+"POT-Creation-Date: 2020-12-27 21:55+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -20,22 +20,18 @@ msgstr ""
 "%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n"
 "%100>=11 && n%100<=14)? 2 : 3);\n"
 
-#: .\models.py:16
+#: .\models.py:15
 msgid "Client"
 msgstr "Клиент"
 
-#: .\models.py:17
+#: .\models.py:16
 msgid "Clients"
 msgstr "Клиенты"
 
+#: .\models.py:30
+msgid "Payment of client"
+msgstr "Оплата клинта"
+
 #: .\models.py:31
-msgctxt "Payment of client"
-msgid "accs"
-msgstr "Плату Клиента"
-
-#: .\models.py:32
 msgid "Payments of clients"
-msgstr "Платы клиентов"
-
-#~ msgid "Payment of client"
-#~ msgstr "Плата клиента"
+msgstr "Оплата клиентов"
